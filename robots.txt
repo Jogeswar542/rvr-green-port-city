@@ -1,0 +1,18 @@
+# robots.txt for RVR Green Port City
+User-agent: *
+Allow: /
+
+# Disallow admin and member areas
+Disallow: /admin.html
+Disallow: /agent.html
+Disallow: /login.html
+
+# Allow images for Googlebot-Image
+User-agent: Googlebot-Image
+Allow: /images/
+
+# Crawl-delay
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://rvr-green-port-city.web.app/sitemap.xml

@@ -1,0 +1,71 @@
+// js/calculator.js
+
+export function setupCalculator() {
+    // Inject Calculator Modal HTML into the body if it doesn't exist
+    if (!document.getElementById('calcModal')) {
+        const modalHTML = `
+        <div id="calcModal" class="modal-overlay" style="display:none;">
+            <div class="modal-box" style="border-top: 5px solid #FFD700; max-width: 350px;">
+                <div class="modal-title" style="color: #d35400; display:flex; justify-content:space-between; align-items:center;">
+                    <span><i class="fas fa-calculator"></i> Quick Calculator</span>
+                    <button onclick="document.getElementById('calcModal').style.display='none'" style="background:none; border:none; font-size:18px; cursor:pointer;">&times;</button>
+                </div>
+                
+                <div style="margin-bottom:15px;">
+                    <label style="font-size:11px; font-weight:700; color:#666; text-transform:uppercase;">Area (Ankanams)</label>
+                    <input type="number" id="calcArea" placeholder="Enter Area" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; margin-top:5px; font-weight:bold;">
+                </div>
+
+                <div style="margin-bottom:15px;">
+                    <label style="font-size:11px; font-weight:700; color:#666; text-transform:uppercase;">Price per Ankanam (₹)</label>
+                    <input type="number" id="calcRate" placeholder="Enter Rate" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; margin-top:5px; font-weight:bold;">
+                </div>
+
+                <div style="background:#f9f9f9; padding:15px; border-radius:8px; border:1px solid #eee; margin-bottom:15px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                        <span style="font-size:12px; color:#555;">Total Price:</span>
+                        <span id="calcTotal" style="font-weight:900; color:#27ae60; font-size:14px;">₹0</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                        <span style="font-size:12px; color:#555;">Sq. Yards:</span>
+                        <span id="calcSqYds" style="font-weight:700; font-size:13px;">0</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between;">
+                        <span style="font-size:12px; color:#555;">Sq. Feet:</span>
+                        <span id="calcSqFt" style="font-weight:700; font-size:13px;">0</span>
+                    </div>
+                </div>
+
+                <button id="calcBtn" style="width:100%; padding:12px; background:linear-gradient(135deg, #FFD700, #ffaa00); border:none; border-radius:8px; font-weight:800; cursor:pointer; color:#000;">CALCULATE</button>
+            </div>
+        </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+    }
+
+    // Event Listeners
+    const btn = document.getElementById('calcBtn');
+    const areaInput = document.getElementById('calcArea');
+    const rateInput = document.getElementById('calcRate');
+
+    function performCalc() {
+        const area = parseFloat(areaInput.value) || 0;
+        const rate = parseFloat(rateInput.value) || 0;
+
+        // Conversions (1 Ankanam = 72 SqFt = 8 SqYards)
+        const sqFt = area * 72;
+        const sqYds = area * 8;
+        const total = area * rate;
+
+        document.getElementById('calcTotal').innerText = "₹ " + total.toLocaleString('en-IN');
+        document.getElementById('calcSqYds').innerText = sqYds.toFixed(2);
+        document.getElementById('calcSqFt').innerText = sqFt.toFixed(2);
+    }
+
+    if(btn) btn.onclick = performCalc;
+}
+
+export function openCalculator() {
+    const modal = document.getElementById('calcModal');
+    if(modal) modal.style.display = 'flex';
+}

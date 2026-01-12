@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- PROTECTION: Block DevTools & Source Code Access -->
+<script src="js/protection.min.js?v=20260111"></script>
+<meta charset="UTF-8">
+<title>Support | RVR Green Port City</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+  --gold-solid: #d4af37;
+  --premium-black: #050505;
+  --glass-white: rgba(255, 255, 255, 0.75);
+  --glass-dark: rgba(5, 5, 5, 0.85);
+  --ios-blur: blur(20px) saturate(180%);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+    font-family: 'Inter', sans-serif; 
+    background-color: var(--premium-black); 
+    background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url("images/bg.png");
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    color: #fff; 
+    overflow-x: hidden; 
+}
+nav {
+  position: fixed; top: 20px; left: 50%; transform: translateX(-50%); width: 94%; max-width: 1400px;
+  background: var(--glass-white); backdrop-filter: var(--ios-blur); -webkit-backdrop-filter: var(--ios-blur);
+  border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 25px; padding: 15px 40px;
+  display: flex; justify-content: space-between; align-items: center; z-index: 10000;
+  box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+}
+.nav-logo img { height: 50px; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.2)); }
+nav .links { display: flex; align-items: center; gap: 8px; }
+nav .links a {
+  text-decoration: none; color: #000; font-weight: 700; font-size: 15px; text-transform: uppercase;
+  letter-spacing: 1.2px; padding: 12px 24px; border-radius: 20px; transition: all 0.4s ease; position: relative; overflow: hidden;
+}
+nav .links a::before {
+  content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+  background: var(--gold-gradient); z-index: -1; transition: left 0.4s ease;
+}
+nav .links a:hover::before { left: 0; }
+nav .links a:hover { color: #000; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4); }
+.member-login {
+  padding: 12px 28px; border-radius: 25px; font-weight: 700; font-size: 14px; text-transform: uppercase;
+  letter-spacing: 1px; text-decoration: none; background: var(--gold-gradient); color: #000; transition: all 0.4s ease;
+  box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+}
+.member-login:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 30px rgba(212, 175, 55, 0.6); }
+.hamburger-btn { display: none; appearance: none; background: transparent; border: none; padding: 10px; cursor: pointer; z-index: 10001; }
+.hamburger-btn .bar { width: 26px; height: 3px; background: #000; border-radius: 2px; display: block; transition: transform 0.25s ease, opacity 0.25s ease; }
+.hamburger-btn .bar + .bar { margin-top: 5px; }
+.hamburger-btn[aria-expanded="true"] .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.hamburger-btn[aria-expanded="true"] .bar:nth-child(2) { opacity: 0; }
+.hamburger-btn[aria-expanded="true"] .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+#newMobileMenu { position: fixed; inset: 0; display: none; visibility: hidden; opacity: 0; pointer-events: none; z-index: 2147483647; background: rgba(0,0,0,0.95); backdrop-filter: var(--ios-blur); -webkit-backdrop-filter: var(--ios-blur); padding: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 18px; }
+#newMobileMenu.open { display: flex; visibility: visible; opacity: 1; pointer-events: auto; }
+#newMobileMenu a { color: #fff; font-size: 22px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; padding: 16px 28px; border-radius: 18px; text-decoration: none; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); width: 80%; text-align: center; }
+#newMobileMenu a:hover { background: var(--gold-gradient); color: #000; }
+.page-hero {
+  height: 60vh; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; margin-top: 0;
+}
+.page-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(255, 255, 255, 0.05)); backdrop-filter: blur(2px); z-index: 1; }
+.page-hero-content { position: relative; z-index: 2; max-width: 900px; padding: 0 20px; }
+.page-hero h1 {
+  font-size: clamp(3rem, 8vw, 5.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 30px;
+  background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Playfair Display', serif;
+}
+section { padding: 120px 8%; position: relative; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 45px; }
+.nearby-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(25px);
+  border-radius: 35px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.5s ease;
+  padding: 60px 45px;
+  text-align: center;
+}
+.nearby-card:hover { 
+  border-color: var(--gold-solid);
+  transform: translateY(-15px);
+  box-shadow: 0 35px 90px rgba(0,0,0,0.5);
+}
+.glass-chat-card {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(35px) saturate(180%);
+  -webkit-backdrop-filter: blur(35px) saturate(180%);
+  border: 3px solid rgba(255, 255, 255, 0.8);
+  border-radius: 40px;
+  padding: 50px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+  transition: all 0.5s ease;
+  position: relative;
+}
+.glass-chat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: var(--gold-gradient);
+}
+.glass-chat-card:hover {
+  transform: translateY(-15px) scale(1.03);
+  box-shadow: 0 45px 100px rgba(0,0,0,0.4);
+}
+.agent-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 25px;
+  border-bottom: 3px solid rgba(0,0,0,0.1);
+}
+.agent-avatar {
+  width: 70px;
+  height: 70px;
+  background: var(--gold-gradient);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  font-weight: 900;
+  font-size: 1.6rem;
+  margin-right: 25px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+.chat-body {
+  background: rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  border-radius: 30px;
+  color: #1a1a1a;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 35px;
+  position: relative;
+}
+.ios-chat-btn {
+  background: linear-gradient(135deg, #25D366, #128C7E);
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px 35px;
+  border-radius: 30px;
+  font-weight: 800;
+  font-size: 1.2rem;
+  transition: all 0.5s ease;
+  box-shadow: 0 15px 40px rgba(37, 211, 102, 0.5);
+  letter-spacing: 1.2px;
+}
+.ios-chat-btn:hover {
+  transform: translateY(-6px) scale(1.06);
+  background: linear-gradient(135deg, #20ba5a, #0f7a6b);
+  box-shadow: 0 25px 50px rgba(37, 211, 102, 0.6);
+}
+@media (max-width: 768px) {
+  .hamburger-btn { display: inline-block; }
+  nav .links, .member-login { display: none; }
+  section { padding: 70px 5%; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo"><img src="images/logo.png" alt="RVR Logo"></div>
+  <div class="links">
+    <a href="index.html">Home</a>
+    <a href="about.html">About Us</a>
+    <a href="amenities.html">Amenities</a>
+    <a href="features.html">Features</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="enquiry.html">Enquiry</a>
+    <a href="support.html">Support</a>
+  </div>
+  <a href="login.html" class="member-login">Member Login</a>
+  <button id="hamburgerBtn" class="hamburger-btn" aria-expanded="false" aria-label="Open menu">
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+  </button>
+</nav>
+
+<div id="newMobileMenu" hidden>
+  <a href="index.html">Home</a>
+  <a href="about.html">About Us</a>
+  <a href="amenities.html">Amenities</a>
+  <a href="features.html">Features</a>
+  <a href="gallery.html">Gallery</a>
+  <a href="enquiry.html">Enquiry</a>
+  <a href="support.html">Support</a>
+</div>
+
+<div class="page-hero">
+  <div class="page-hero-content">
+    <h1>Customer Support</h1>
+    <p style="font-size: 1.4rem; color: #e4e3d3; letter-spacing: 2px;">We're Here to Assist You 24/7</p>
+  </div>
+</div>
+
+<section id="support">
+  <div class="grid">
+    <div class="nearby-card">
+      <div style="font-size: 55px; margin-bottom: 30px;">📞</div>
+      <h3 style="color: var(--gold-solid); font-size: 2rem; font-family: 'Playfair Display';">Direct Helpline</h3>
+      <p style="margin-top: 25px; font-size: 1.7rem; color: #fff; font-weight: 900;">+91 9700900532</p>
+      <p style="color: #fff; font-weight: 900; margin-bottom: 30px; font-size: 1.7rem;">+91 9440716226</p>
+      <p style="color: #e4e3d3; font-size: 1.1rem;">Available 24/7 for plot inquiries, site visits, documentation, and legal assistance.</p>
+    </div>
+    
+    <div class="nearby-card">
+      <div style="font-size: 55px; margin-bottom: 30px;">📍</div>
+      <h3 style="color: var(--gold-solid); font-size: 2rem; font-family: 'Playfair Display';">Visit Our Office</h3>
+      <p style="margin-top: 25px; color: #fff; line-height: 1.9; font-size: 1.2rem;">
+        RVR Real Estate Consultancy<br>
+        Trunk Road, Kavali<br>
+        Andhra Pradesh 524201
+      </p>
+      <p style="margin-top: 25px; color: #e4e3d3; font-size: 1.1rem;">
+        Walk-in hours: Mon-Sat 9 AM - 7 PM, Sunday 10 AM - 4 PM
+      </p>
+    </div>
+
+    <div class="glass-chat-card">
+      <div class="agent-header">
+        <div class="agent-avatar">RVR</div>
+        <div>
+          <h3 style="color: #000; margin: 0; font-size: 1.6rem; font-family: 'Playfair Display';">Expert Consultant</h3>
+          <p style="color: #2ecc71; margin: 0; font-size: 1rem; font-weight: 800;">● Available Now</p>
+        </div>
+      </div>
+      <div class="chat-body">
+        <p>Namaskaram! How can we help you with <strong>Gitanjali Green Port City</strong> plots? Ready for a site visit or need legal guidance?</p>
+      </div>
+      <a href="https://wa.me/919700900532" target="_blank" class="ios-chat-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="white" style="margin-right: 15px;">
+          <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.463 1.065 2.876 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+        </svg>
+        Chat on WhatsApp
+      </a>
+    </div>
+    
+    <div class="nearby-card">
+      <div style="font-size: 55px; margin-bottom: 30px;">✉️</div>
+      <h3 style="color: var(--gold-solid); font-size: 2rem; font-family: 'Playfair Display';">Email Support</h3>
+      <p style="margin-top: 25px; color: #fff; line-height: 1.9; font-size: 1.2rem;">
+        <a href="mailto:rvrconsultancy2003@gmail.com" style="color: var(--gold-solid); text-decoration: none;">rvrconsultancy2003@gmail.com</a>
+      </p>
+      <p style="margin-top: 25px; color: #e4e3d3; font-size: 1.1rem;">
+        Send us your queries, documents, or feedback. We respond within 2 hours.
+      </p>
+    </div>
+    
+    <div class="nearby-card">
+      <div style="font-size: 55px; margin-bottom: 30px;">📄</div>
+      <h3 style="color: var(--gold-solid); font-size: 2rem; font-family: 'Playfair Display';">Documentation Support</h3>
+      <p style="margin-top: 25px; color: #fff; line-height: 1.9; font-size: 1.1rem;">
+        Our legal team assists with NUDA approvals, registrations, and plot handover documentation.
+      </p>
+    </div>
+    
+    <div class="nearby-card">
+      <div style="font-size: 55px; margin-bottom: 30px;">🚗</div>
+      <h3 style="color: var(--gold-solid); font-size: 2rem; font-family: 'Playfair Display';">Free Site Visits</h3>
+      <p style="margin-top: 25px; color: #fff; line-height: 1.9; font-size: 1.1rem;">
+        Schedule a complimentary site visit with our representatives. We provide transportation from Kavali.
+      </p>
+      <p style="margin-top: 20px;">
+        <a href="enquiry.html" style="background: var(--gold-gradient); padding: 15px 35px; border-radius: 25px; color: #000; text-decoration: none; font-weight: 800; display: inline-block;">Book Now</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+function openNewMenu() {
+  const menu = document.getElementById('newMobileMenu');
+  const btn = document.getElementById('hamburgerBtn');
+  if (!menu || !btn) return;
+  menu.classList.add('open');
+  menu.removeAttribute('hidden');
+  btn.setAttribute('aria-expanded', 'true');
+  document.body.style.overflow = 'hidden';
+}
+function closeNewMenu() {
+  const menu = document.getElementById('newMobileMenu');
+  const btn = document.getElementById('hamburgerBtn');
+  if (!menu || !btn) return;
+  menu.classList.remove('open');
+  menu.setAttribute('hidden', '');
+  btn.setAttribute('aria-expanded', 'false');
+  document.body.style.overflow = '';
+}
+function setupNewHamburger() {
+  const btn = document.getElementById('hamburgerBtn');
+  const menu = document.getElementById('newMobileMenu');
+  if (!btn || !menu) return;
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    if (expanded) closeNewMenu(); else openNewMenu();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') {
+      closeNewMenu();
+    }
+  });
+  document.addEventListener('click', (e) => {
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    if (expanded && !menu.contains(e.target) && !btn.contains(e.target)) {
+      closeNewMenu();
+    }
+  });
+}
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('nav');
+  if (window.scrollY > 100) {
+    nav.style.background = 'rgba(255, 255, 255, 0.98)';
+    nav.style.backdropFilter = 'blur(35px) saturate(180%)';
+    nav.style.boxShadow = '0 25px 70px rgba(0,0,0,0.6)';
+  } else {
+    nav.style.background = 'rgba(255, 255, 255, 0.75)';
+    nav.style.backdropFilter = 'blur(20px) saturate(180%)';
+    nav.style.boxShadow = '0 15px 50px rgba(0,0,0,0.4)';
+  }
+});
+
+function initNavbar() {
+  const links = document.querySelectorAll('#newMobileMenu a');
+  links.forEach(link => link.addEventListener('click', closeNewMenu));
+  setupNewHamburger();
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initNavbar);
+} else {
+  initNavbar();
+}
+</script>
+
+<!-- WHATSAPP CHAT SUPPORT WIDGET -->
+<a href="https://wa.me/919700900532?text=Hello%20RVR%20Green%20Port%20City!%20I%20would%20like%20assistance%20with%20my%20query." 
+   style="position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); 
+   border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 15px 40px rgba(212, 175, 55, 0.6); 
+   z-index: 9999; transition: all 0.4s ease; text-decoration: none;" 
+   title="Chat with us on WhatsApp" 
+   onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 20px 60px rgba(212, 175, 55, 0.8)';" 
+   onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 15px 40px rgba(212, 175, 55, 0.6)';">
+  <i class="fab fa-whatsapp" style="font-size: 28px; color: #fff;"></i>
+</a>
+
+</body>
+</html>

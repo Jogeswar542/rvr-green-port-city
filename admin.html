@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- PROTECTION: Block DevTools & Source Code Access -->
+    <script src="js/protection.min.js?v=20260111"></script>
+        <script>
+            // Early gate: require prior login
+            (function() {
+                const role = localStorage.getItem('userRole') || localStorage.getItem('role');
+                if (!role || (role !== 'admin' && role !== 'agent')) {
+                    window.location.replace('login.html');
+                }
+            })();
+        </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | RVR</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- CHECK LOGIN STATUS -->
+    <script src="role.js?v=20260111"></script>
+
+    <style>
+        /* BACKGROUND IMAGE bg1.jpg */
+        body { 
+            margin: 0; 
+            background: url('images/bg1.jpg') center/cover no-repeat fixed; 
+            font-family: 'Inter', sans-serif; 
+            overflow: hidden; 
+              firebase init hosting
+        firebase deploy --only hosting  }
+        
+        /* Dark Overlay for better text contrast */
+      
+
+        /* HEADER */
+        .glass-header {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 1400px; padding: 10px 25px;
+            background: rgba(20, 20, 20, 0.7); backdrop-filter: blur(20px); border-radius: 20px;
+            display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.1); z-index: 1000;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .header-controls { display: flex; align-items: center; gap: 15px; }
+
+        .filter-select {
+            padding: 10px 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.6); color: #fff; font-weight: 700; cursor: pointer;
+            font-family: 'Inter'; outline: none; text-transform: uppercase; font-size: 11px;
+        }
+
+        .icon-btn {
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff;
+            width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: 0.3s;
+        }
+        .icon-btn:hover { background: #FFD700; color: #000; }
+
+        /* PLOTS SYNC INDICATOR */
+        #plotsSyncIndicator {
+            position: fixed; bottom: 30px; right: 30px; z-index: 950;
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2); border-radius: 30px;
+            padding: 10px 16px; color: #fff; font-size: 12px; font-weight: 600;
+            display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+        #plotsSyncIndicator.synced { color: #4ade80; border-color: #4ade80; }
+        #plotsSyncIndicator.syncing { color: #facc15; border-color: #facc15; animation: pulse 1.5s infinite; }
+        #plotsSyncIndicator.offline { color: #ef4444; border-color: #ef4444; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        /* SIDEBAR */
+        #adminSidebar {
+            position: fixed; top: 0; right: -420px; width: 360px; height: 100vh;
+            background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(30px);
+            border-left: 1px solid rgba(255,255,255,0.1); z-index: 999;
+            padding: 90px 25px 25px; transition: right 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: flex; flex-direction: column; overflow-y: auto;
+        }
+        #adminSidebar.open { right: 0; }
+
+        .snapshot { background: rgba(255,255,255,0.05); padding: 20px; border-radius: 18px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.05); }
+        .row { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; }
+        .lbl { color: #888; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        .val { color: #eee; font-weight: 600; font-size: 13px; }
+        .hl { color: #ffd700; font-size: 14px; }
+        
+        h3 { color: #fff; margin: 0 0 15px 0; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+        label { color: #aaa; font-size: 10px; font-weight: 800; margin-top: 15px; display: block; text-transform: uppercase; }
+        
+        input, select, textarea { width: 100%; padding: 14px; margin-top: 6px; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; font-family: 'Inter'; font-size: 13px; box-sizing: border-box; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #ffd700; }
+
+        .btn-save { width: 100%; padding: 16px; margin-top: 20px; background: linear-gradient(135deg, #ffd700, #ffaa00); color: #000; font-weight: 900; border: none; border-radius: 12px; cursor: pointer; text-transform: uppercase; }
+        .btn-close { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid #333; margin-top: 12px; width: 100%; padding: 12px; border-radius: 12px; cursor: pointer; text-transform: uppercase; }
+
+        /* STATUS TOGGLE */
+        .status-toggle {
+            width: 45px; height: 45px; border-radius: 50%; cursor: pointer; 
+            border: 2px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center;
+            font-size: 18px; background: rgba(0,0,0,0.3); transition: all 0.3s; color: #fff;
+        }
+        .status-toggle.blink { animation: pulse 0.6s ease-in-out; }
+        @keyframes pulse { 50% { transform: scale(1.2); box-shadow: 0 0 20px currentColor; } }
+
+        /* MODAL STYLES (Copied from calculator.js injection) */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-box { background: #fff; padding: 25px; border-radius: 12px; width: 90%; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+
+        canvas { display: block; cursor: crosshair; }
+    </style>
+</head>
+<body>
+    <div class="glass-header">
+        <div style="font-weight: 900; color:#fff; font-size: 1.4rem;">OWNER<span style="color:#ffd700">.ADMIN</span></div>
+        <div class="header-controls">
+            <button class="icon-btn" id="dashboardBtn" title="Sales Dashboard" onclick="openDashboard()"><i class="fas fa-chart-line"></i></button>
+            <button class="icon-btn" id="openCalcBtn" title="Calculator"><i class="fas fa-calculator"></i></button>
+            
+            <select id="viewFilter" class="filter-select">
+                <option value="All">👁 All</option>
+                <option value="Available">🟢 Available</option>
+                <option value="Booked">🟠 Booked</option>
+                <option value="Sold">🔴 Sold</option>
+                <option value="Mortgage">🏦 Mortgage</option>
+            </select>
+            <button id="logoutBtn" class="icon-btn" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+    </div>
+    
+    <canvas id="mainCanvas"></canvas>
+
+    <!-- Plots Sync Indicator -->
+    <div id="plotsSyncIndicator" title="Plots sync status">
+        <span>📦 Plots Offline Cache</span>
+    </div>
+
+    <div id="adminSidebar">
+        <h3>Selected Plot</h3>
+        <div class="snapshot">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <div>
+                    <h2 id="dTitle" style="color:#fff; margin:0; font-size: 1.6rem; line-height:1;">--</h2>
+                    <div id="dStatusBadge" style="margin-top:5px; font-size:11px; padding:4px 8px; border-radius:4px; background:#333; display:inline-block;">--</div>
+                </div>
+                <div id="quickToggle" class="status-toggle" title="Cycle Status"><i class="fas fa-check"></i></div>
+            </div>
+            <div class="row"><span class="lbl">Area</span><span class="val" id="dArea">--</span></div>
+            <div class="row"><span class="lbl">Price/Ank</span><span class="val" id="dRate">--</span></div>
+            <div class="row"><span class="lbl">Total</span><span class="val hl" id="dTotal">--</span></div>
+            <div class="row"><span class="lbl">Block</span><span class="val" id="dBlock">--</span></div>
+            <div class="row"><span class="lbl">Face</span><span class="val" id="dFace">--</span></div>
+        </div>
+
+        <h3>Edit Data</h3>
+        <select id="eStatus">
+            <option value="Available">Available</option>
+            <option value="Booked">Booked</option>
+            <option value="Sold">Sold</option>
+            <option value="Mortgage">Mortgage</option>
+        </select>
+        <input type="text" id="ePrice" placeholder="Price">
+        <input type="text" id="eTotal" placeholder="Total">
+        <textarea id="eRemark" rows="3" placeholder="Remarks"></textarea>
+        <button id="saveBtn" class="btn-save">SYNC CHANGES</button>
+        <button onclick="document.getElementById('adminSidebar').classList.remove('open')" class="btn-close">Close Sidebar</button>
+    </div>
+
+    <script type="module">
+        import { startRealtimeSync, updatePlotInCloud, logout } from "./js/auth.js";
+        import { setupCanvas, setCanvasFilter } from "./js/script.js";
+        import { setupCalculator, openCalculator } from "./js/calculator.js";
+
+        let currentPlotId = null;
+
+        // Init Calculator
+        setupCalculator();
+        document.getElementById('openCalcBtn').onclick = openCalculator;
+
+        setupCanvas('mainCanvas', (plot) => {
+            currentPlotId = plot.id;
+            fillSidebar(plot);
+        });
+
+        document.getElementById('viewFilter').addEventListener('change', (e) => {
+            setCanvasFilter(e.target.value);
+        });
+
+        const STATUS_CONFIG = {
+            'Available': { color: '#2ed573', icon: 'fa-check-circle' },
+            'Booked':    { color: '#ffa502', icon: 'fa-user-lock' },
+            'Sold':      { color: '#ff4757', icon: 'fa-ban' },
+            'Mortgage':  { color: '#ffd700', icon: 'fa-university' }
+        };
+
+        function fillSidebar(plot) {
+            document.getElementById('dTitle').innerText = "Plot " + plot.plotNumber;
+            document.getElementById('dArea').innerText = plot.area || "-";
+            document.getElementById('dRate').innerText = plot.pricePerAnkanam || "-";
+            document.getElementById('dTotal').innerText = plot.totalPrice || "-";
+            document.getElementById('dBlock').innerText = plot.block || "-";
+            document.getElementById('dFace').innerText = plot.directionFacing || "-";
+
+            // Update Form
+            document.getElementById('eStatus').value = plot.status;
+            document.getElementById('ePrice').value = plot.pricePerAnkanam || "";
+            document.getElementById('eTotal').value = plot.totalPrice || "";
+            document.getElementById('eRemark').value = plot.remarks || "";
+
+            updateUIColors(plot.status);
+            document.getElementById('adminSidebar').classList.add('open');
+        }
+
+        const quickToggle = document.getElementById('quickToggle');
+        const statusOrder = ['Available', 'Booked', 'Sold', 'Mortgage'];
+        
+        quickToggle.onclick = () => {
+            const current = document.getElementById('eStatus').value;
+            const next = statusOrder[(statusOrder.indexOf(current) + 1) % 4];
+            document.getElementById('eStatus').value = next;
+            updateUIColors(next);
+            quickToggle.classList.add('blink');
+            setTimeout(() => quickToggle.classList.remove('blink'), 600);
+        };
+
+        function updateUIColors(status) {
+            const config = STATUS_CONFIG[status] || { color: '#555', icon: 'fa-question' };
+            const badge = document.getElementById('dStatusBadge');
+            badge.style.background = config.color;
+            badge.innerText = status;
+
+            quickToggle.style.borderColor = config.color;
+            quickToggle.style.color = config.color;
+            quickToggle.innerHTML = `<i class="fas ${config.icon}"></i>`;
+        }
+
+        document.getElementById('saveBtn').onclick = async () => {
+            const btn = document.getElementById('saveBtn');
+            btn.innerText = "Syncing...";
+            const data = {
+                status: document.getElementById('eStatus').value,
+                price: document.getElementById('ePrice').value,
+                total: document.getElementById('eTotal').value,
+                remarks: document.getElementById('eRemark').value
+            };
+            await updatePlotInCloud(currentPlotId, data);
+            btn.innerText = "Done ✓";
+            setTimeout(() => btn.innerText = "SYNC CHANGES", 2000);
+        };
+
+        startRealtimeSync();
+        document.getElementById('logoutBtn').onclick = () => { if(confirm("Logout?")) { logout(); window.location.href='index.html'; }};
+    </script>
+
+    <!-- SALES DASHBOARD MODAL -->
+    <div id="dashboardModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 99999; overflow-y: auto; padding: 20px;" onclick="if(event.target.id==='dashboardModal') closeDashboard()">
+        <div style="max-width: 1200px; margin: 0 auto; background: linear-gradient(135deg, #1a1a1a, #2d2d2d); border-radius: 25px; padding: 40px; border: 2px solid #ffd700;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <h2 style="color: #ffd700; font-size: 28px; font-weight: 900; margin: 0;">📊 Sales Dashboard</h2>
+                <button onclick="closeDashboard()" style="background: none; border: none; color: #ffd700; font-size: 32px; cursor: pointer;">&times;</button>
+            </div>
+            
+            <!-- Stats Cards -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px;">
+                <div style="background: rgba(46,204,113,0.1); padding: 20px; border-radius: 15px; border: 2px solid #2ecc71;">
+                    <div style="color: #2ecc71; font-size: 14px; font-weight: 600; margin-bottom: 10px;">AVAILABLE PLOTS</div>
+                    <div id="statsAvailable" style="color: #2ecc71; font-size: 36px; font-weight: 900;">--</div>
+                </div>
+                <div style="background: rgba(231,76,60,0.1); padding: 20px; border-radius: 15px; border: 2px solid #e74c3c;">
+                    <div style="color: #e74c3c; font-size: 14px; font-weight: 600; margin-bottom: 10px;">SOLD PLOTS</div>
+                    <div id="statsSold" style="color: #e74c3c; font-size: 36px; font-weight: 900;">--</div>
+                </div>
+                <div style="background: rgba(243,156,18,0.1); padding: 20px; border-radius: 15px; border: 2px solid #f39c12;">
+                    <div style="color: #f39c12; font-size: 14px; font-weight: 600; margin-bottom: 10px;">BOOKED PLOTS</div>
+                    <div id="statsBooked" style="color: #f39c12; font-size: 36px; font-weight: 900;">--</div>
+                </div>
+                <div style="background: rgba(241,196,15,0.1); padding: 20px; border-radius: 15px; border: 2px solid #f1c40f;">
+                    <div style="color: #f1c40f; font-size: 14px; font-weight: 600; margin-bottom: 10px;">MORTGAGE</div>
+                    <div id="statsMortgage" style="color: #f1c40f; font-size: 36px; font-weight: 900;">--</div>
+                </div>
+            </div>
+            
+            <!-- Charts -->
+            <div style="background: rgba(255,255,255,0.05); padding: 30px; border-radius: 20px; margin-bottom: 30px;">
+                <h3 style="color: #ffd700; margin-bottom: 20px;">Plot Status Distribution</h3>
+                <canvas id="statusChart" width="400" height="200"></canvas>
+            </div>
+            
+            <div style="background: rgba(255,255,255,0.05); padding: 30px; border-radius: 20px;">
+                <h3 style="color: #ffd700; margin-bottom: 20px;">Total Revenue Breakdown</h3>
+                <div id="revenueStats" style="color: #fff; font-size: 16px; line-height: 2;">
+                    <div>💰 Total Revenue (Sold): <span id="totalRevenue" style="color: #ffd700; font-weight: 900;">₹0</span></div>
+                    <div>📋 Pending Revenue (Booked): <span id="pendingRevenue" style="color: #f39c12; font-weight: 900;">₹0</span></div>
+                    <div>🏦 Mortgage Revenue: <span id="mortgageRevenue" style="color: #f1c40f; font-weight: 900;">₹0</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script type="module">
+        import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { db } from './js/firebase-init.js';
+        
+        let dashboardChart = null;
+        
+        window.openDashboard = async function() {
+            document.getElementById('dashboardModal').style.display = 'block';
+            await loadDashboardStats();
+        };
+        
+        window.closeDashboard = function() {
+            document.getElementById('dashboardModal').style.display = 'none';
+        };
+        
+        async function loadDashboardStats() {
+            try {
+                const snapshot = await getDocs(collection(db, 'plots'));
+                const plots = snapshot.docs.map(doc => doc.data());
+                
+                const stats = {
+                    Available: plots.filter(p => p.status === 'Available').length,
+                    Sold: plots.filter(p => p.status === 'Sold').length,
+                    Booked: plots.filter(p => p.status === 'Booked').length,
+                    Mortgage: plots.filter(p => p.status === 'Mortgage').length
+                };
+                
+                document.getElementById('statsAvailable').textContent = stats.Available;
+                document.getElementById('statsSold').textContent = stats.Sold;
+                document.getElementById('statsBooked').textContent = stats.Booked;
+                document.getElementById('statsMortgage').textContent = stats.Mortgage;
+                
+                // Calculate revenue
+                const soldRevenue = plots.filter(p => p.status === 'Sold').reduce((sum, p) => sum + (parseFloat(p.price) || 0), 0);
+                const bookedRevenue = plots.filter(p => p.status === 'Booked').reduce((sum, p) => sum + (parseFloat(p.price) || 0), 0);
+                const mortgageRevenue = plots.filter(p => p.status === 'Mortgage').reduce((sum, p) => sum + (parseFloat(p.price) || 0), 0);
+                
+                document.getElementById('totalRevenue').textContent = '₹' + (soldRevenue / 100000).toFixed(2) + ' L';
+                document.getElementById('pendingRevenue').textContent = '₹' + (bookedRevenue / 100000).toFixed(2) + ' L';
+                document.getElementById('mortgageRevenue').textContent = '₹' + (mortgageRevenue / 100000).toFixed(2) + ' L';
+                
+                // Draw chart
+                const ctx = document.getElementById('statusChart').getContext('2d');
+                
+                if (dashboardChart) {
+                    dashboardChart.destroy();
+                }
+                
+                dashboardChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Available', 'Sold', 'Booked', 'Mortgage'],
+                        datasets: [{
+                            data: [stats.Available, stats.Sold, stats.Booked, stats.Mortgage],
+                            backgroundColor: ['#2ecc71', '#e74c3c', '#f39c12', '#f1c40f'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: '#fff',
+                                    font: { size: 14, weight: 'bold' }
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch (e) {
+                console.error('Dashboard error:', e);
+            }
+        }
+    </script>
+</body>
+</html>

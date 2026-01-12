@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Member Login | RVR Green Port City</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+      --gold-solid: #d4af37;
+      --premium-black: #050505;
+      --glass-white: rgba(255, 255, 255, 0.75);
+      --ios-blur: blur(20px) saturate(180%);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--premium-black);
+      background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('images/bg.jpg');
+      background-attachment: fixed;
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 450px;
+      padding: 20px;
+    }
+
+    .login-box {
+      background: var(--glass-white);
+      backdrop-filter: var(--ios-blur);
+      border-radius: 30px;
+      padding: 60px 40px;
+      border: 2px solid rgba(255,255,255,0.4);
+      text-align: center;
+      box-shadow: 0 40px 120px rgba(0,0,0,0.6);
+    }
+
+    .login-logo {
+      height: 60px;
+      margin-bottom: 30px;
+      filter: drop-shadow(0 3px 8px rgba(0,0,0,0.2));
+    }
+
+    .login-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      background: var(--gold-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+      font-weight: 900;
+    }
+
+    .login-subtitle {
+      color: #000;
+      font-size: 1rem;
+      margin-bottom: 40px;
+      letter-spacing: 1px;
+    }
+
+    .role-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .role-btn {
+      padding: 18px;
+      border: 2px solid rgba(0,0,0,0.2);
+      background: rgba(0,0,0,0.05);
+      border-radius: 20px;
+      color: #000;
+      font-weight: 800;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .role-btn i {
+      font-size: 24px;
+      color: var(--gold-solid);
+    }
+
+    .role-btn.active {
+      background: var(--gold-gradient);
+      border-color: var(--gold-solid);
+      color: #000;
+      transform: scale(1.05);
+      box-shadow: 0 15px 40px rgba(212, 175, 55, 0.4);
+    }
+
+    .role-btn:hover {
+      transform: translateY(-3px);
+      border-color: var(--gold-solid);
+    }
+
+    .login-input {
+      width: 100%;
+      padding: 18px 25px;
+      margin: 15px 0;
+      border: 2px solid rgba(0,0,0,0.15);
+      border-radius: 25px;
+      background: rgba(0,0,0,0.05);
+      color: #000;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: 'Inter';
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    .login-input::placeholder {
+      color: rgba(0,0,0,0.4);
+    }
+
+    .login-input:focus {
+      outline: none;
+      border-color: var(--gold-solid);
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+    }
+
+    .google-signin-btn {
+      width: 100%;
+      padding: 18px;
+      background: #fff;
+      color: #444;
+      border: 2px solid rgba(0,0,0,0.1);
+      border-radius: 25px;
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .google-signin-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      border-color: var(--gold-solid);
+    }
+
+    .google-signin-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .google-icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    .login-submit {
+      width: 100%;
+      padding: 20px;
+      background: var(--gold-gradient);
+      color: #000;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      margin-top: 20px;
+      box-shadow: 0 20px 50px rgba(212, 175, 55, 0.4);
+    }
+
+    .login-submit:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 30px 70px rgba(212, 175, 55, 0.6);
+    }
+
+    .login-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .login-error {
+      color: #c0392b;
+      font-size: 13px;
+      margin-top: 15px;
+      display: none;
+      font-weight: 700;
+    }
+
+    .login-footer {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .back-home {
+      color: #000;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      transition: all 0.3s ease;
+    }
+
+    .back-home:hover {
+      color: var(--gold-solid);
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-box">
+      <img src="images/logo.png" alt="RVR Logo" class="login-logo">
+      <h1 class="login-title">MEMBER LOGIN</h1>
+      <p class="login-subtitle">Portal Access</p>
+
+      <div class="role-selector">
+        <button class="role-btn active" id="adminBtn" onclick="setRole('admin')">
+          <i class="fas fa-crown"></i>
+          Admin
+        </button>
+        <button class="role-btn" id="agentBtn" onclick="setRole('agent')">
+          <i class="fas fa-briefcase"></i>
+          Agent
+        </button>
+      </div>
+
+      <p style="color: #000; font-size: 14px; margin: 20px 0; font-weight: 600;">Sign in with your authorized Google account</p>
+
+      <button class="google-signin-btn" id="googleSignInBtn" onclick="handleGoogleSignIn()">
+        <svg class="google-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        <span>Sign in with Google</span>
+      </button>
+
+      <div style="margin: 20px 0; display:flex; align-items:center; gap:12px;">
+        <div style="flex:1; height:1px; background: rgba(0,0,0,0.1);"></div>
+        <div style="color:#666; font-weight:700; font-size:12px;">OR</div>
+        <div style="flex:1; height:1px; background: rgba(0,0,0,0.1);"></div>
+      </div>
+
+      <!-- Admin Credentials (visible when Admin role selected) -->
+      <div id="adminCredBlock">
+        <input type="text" id="adminIdInput" class="login-input" placeholder="Admin ID (e.g., admin001)">
+        <input type="password" id="adminPwdInput" class="login-input" placeholder="Admin Password">
+        <button class="login-submit" onclick="handleAdminCredentialLogin()">Login as Admin</button>
+      </div>
+
+      <!-- Agent Credentials (visible when Agent role selected) -->
+      <div id="agentCredBlock" style="display:none;">
+        <input type="text" id="agentIdInput" class="login-input" placeholder="Agent ID (e.g., agent001)">
+        <input type="password" id="agentPwdInput" class="login-input" placeholder="Agent Password">
+        <button class="login-submit" onclick="handleAgentCredentialLogin()">Login as Agent</button>
+      </div>
+
+      <div class="login-error" id="loginError">
+        <i class="fas fa-exclamation-circle"></i> <span id="errorMessage">Sign-in failed</span>
+      </div>
+
+      <div class="login-footer">
+        <a href="index.html" class="back-home"><i class="fas fa-arrow-left"></i> Back to Home</a>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { signInWithGoogle, signInAgentWithCredentials, signInAdminWithCredentials } from './js/firebase-init.js';
+
+    let selectedRole = 'admin';
+
+    window.setRole = function(role) {
+      selectedRole = role;
+      document.getElementById('adminBtn').classList.toggle('active', role === 'admin');
+      document.getElementById('agentBtn').classList.toggle('active', role === 'agent');
+      hideError();
+      // Toggle UI blocks
+      const adminBlock = document.getElementById('adminCredBlock');
+      const agentBlock = document.getElementById('agentCredBlock');
+      if (role === 'admin') {
+        adminBlock.style.display = 'block';
+        agentBlock.style.display = 'none';
+      } else {
+        adminBlock.style.display = 'none';
+        agentBlock.style.display = 'block';
+      }
+    };
+
+    function showError(message) {
+      const errorEl = document.getElementById('loginError');
+      const errorMessage = document.getElementById('errorMessage');
+      errorMessage.textContent = message;
+      errorEl.style.display = 'block';
+    }
+
+    function hideError() {
+      document.getElementById('loginError').style.display = 'none';
+    }
+
+    window.handleGoogleSignIn = async function() {
+      const btn = document.getElementById('googleSignInBtn');
+      hideError();
+      
+      try {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+        
+        const result = await signInWithGoogle(selectedRole);
+        
+        if (result.success) {
+          console.log('✅ Login successful:', result.user);
+          
+          // Show success message
+          btn.innerHTML = '<i class="fas fa-check"></i> Success! Redirecting...';
+          btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+          btn.style.color = '#fff';
+          
+          // Redirect to appropriate page
+          setTimeout(() => {
+            if (result.role === 'admin') {
+              window.location.href = 'admin.html';
+            } else if (result.role === 'agent') {
+              window.location.href = 'agent.html';
+            }
+          }, 800);
+        }
+      } catch (error) {
+        console.error('❌ Login error:', error);
+        
+        // Restore button
+        btn.disabled = false;
+        btn.innerHTML = `
+          <svg class="google-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          <span>Sign in with Google</span>
+        `;
+        
+        // Show error
+        showError(error.message || 'Sign-in failed. Please try again.');
+      }
+    };
+
+    window.handleAdminCredentialLogin = async function() {
+      hideError();
+      const idEl = document.getElementById('adminIdInput');
+      const pwdEl = document.getElementById('adminPwdInput');
+      const btns = document.querySelectorAll('.login-submit');
+      const adminBtn = btns[0];
+      
+      try {
+        adminBtn.disabled = true;
+        adminBtn.textContent = 'Verifying...';
+        const res = await signInAdminWithCredentials((idEl.value || '').trim(), (pwdEl.value || '').trim());
+        if (res.success) {
+          adminBtn.textContent = 'Success! Redirecting...';
+          adminBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+          adminBtn.style.color = '#fff';
+          setTimeout(() => window.location.href = 'admin.html', 700);
+          return; // Skip finally on success
+        }
+      } catch (e) {
+        showError(e.message || 'Login failed');
+        adminBtn.disabled = false;
+        adminBtn.textContent = 'Login as Admin';
+      }
+    };
+
+    window.handleAgentCredentialLogin = async function() {
+      hideError();
+      const idEl = document.getElementById('agentIdInput');
+      const pwdEl = document.getElementById('agentPwdInput');
+      const btns = document.querySelectorAll('.login-submit');
+      const agentBtn = btns[btns.length - 1];
+      
+      try {
+        agentBtn.disabled = true;
+        agentBtn.textContent = 'Verifying...';
+        const res = await signInAgentWithCredentials((idEl.value || '').trim(), (pwdEl.value || '').trim());
+        if (res.success) {
+          agentBtn.textContent = 'Success! Redirecting...';
+          agentBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+          agentBtn.style.color = '#fff';
+          setTimeout(() => window.location.href = 'agent.html', 700);
+          return; // Skip error handling on success
+        }
+      } catch (e) {
+        showError(e.message || 'Login failed');
+        agentBtn.disabled = false;
+        agentBtn.textContent = 'Login as Agent';
+      }
+    }
+  </script>
+</body>
+</html>

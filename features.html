@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- PROTECTION: Block DevTools & Source Code Access -->
+<script src="js/protection.min.js?v=20260111"></script>
+<meta charset="UTF-8">
+<title>Features | RVR Green Port City</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+  --gold-solid: #d4af37;
+  --premium-black: #050505;
+  --glass-white: rgba(255, 255, 255, 0.75);
+  --glass-dark: rgba(5, 5, 5, 0.85);
+  --ios-blur: blur(20px) saturate(180%);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+    font-family: 'Inter', sans-serif; 
+    background-color: var(--premium-black); 
+    background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url("images/bg.png");
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    color: #fff; 
+    overflow-x: hidden; 
+}
+nav {
+  position: fixed; top: 20px; left: 50%; transform: translateX(-50%); width: 94%; max-width: 1400px;
+  background: var(--glass-white); backdrop-filter: var(--ios-blur); -webkit-backdrop-filter: var(--ios-blur);
+  border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 25px; padding: 15px 40px;
+  display: flex; justify-content: space-between; align-items: center; z-index: 10000;
+  box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+}
+.nav-logo img { height: 50px; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.2)); }
+nav .links { display: flex; align-items: center; gap: 8px; }
+nav .links a {
+  text-decoration: none; color: #000; font-weight: 700; font-size: 15px; text-transform: uppercase;
+  letter-spacing: 1.2px; padding: 12px 24px; border-radius: 20px; transition: all 0.4s ease; position: relative; overflow: hidden;
+}
+nav .links a::before {
+  content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+  background: var(--gold-gradient); z-index: -1; transition: left 0.4s ease;
+}
+nav .links a:hover::before { left: 0; }
+nav .links a:hover { color: #000; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4); }
+.member-login {
+  padding: 12px 28px; border-radius: 25px; font-weight: 700; font-size: 14px; text-transform: uppercase;
+  letter-spacing: 1px; text-decoration: none; background: var(--gold-gradient); color: #000; transition: all 0.4s ease;
+  box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+}
+.member-login:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 30px rgba(212, 175, 55, 0.6); }
+.hamburger-btn { display: none; appearance: none; background: transparent; border: none; padding: 10px; cursor: pointer; z-index: 10001; }
+.hamburger-btn .bar { width: 26px; height: 3px; background: #000; border-radius: 2px; display: block; transition: transform 0.25s ease, opacity 0.25s ease; }
+.hamburger-btn .bar + .bar { margin-top: 5px; }
+.hamburger-btn[aria-expanded="true"] .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.hamburger-btn[aria-expanded="true"] .bar:nth-child(2) { opacity: 0; }
+.hamburger-btn[aria-expanded="true"] .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+#newMobileMenu { position: fixed; inset: 0; display: none; visibility: hidden; opacity: 0; pointer-events: none; z-index: 2147483647; background: rgba(0,0,0,0.95); backdrop-filter: var(--ios-blur); -webkit-backdrop-filter: var(--ios-blur); padding: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 18px; }
+#newMobileMenu.open { display: flex; visibility: visible; opacity: 1; pointer-events: auto; }
+#newMobileMenu a { color: #fff; font-size: 22px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; padding: 16px 28px; border-radius: 18px; text-decoration: none; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); width: 80%; text-align: center; }
+#newMobileMenu a:hover { background: var(--gold-gradient); color: #000; }
+.page-hero {
+  height: 60vh; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; margin-top: 0;
+}
+.page-hero::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(255, 255, 255, 0.05)); backdrop-filter: blur(2px); z-index: 1; }
+.page-hero-content { position: relative; z-index: 2; max-width: 900px; padding: 0 20px; }
+.page-hero h1 {
+  font-size: clamp(3rem, 8vw, 5.5rem); font-weight: 900; line-height: 1.1; margin-bottom: 30px;
+  background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Playfair Display', serif;
+}
+section { padding: 120px 8%; position: relative; }
+.grid-amenities {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 35px;
+}
+.card-amenity {
+  position: relative;
+  height: 400px;
+  border-radius: 40px;
+  overflow: hidden;
+  border: 3px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.7s ease;
+}
+.card-amenity img { 
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover; 
+  transition: all 0.7s ease; 
+}
+.card-amenity-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(transparent 65%, rgba(0,0,0,0.95));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 50px;
+  opacity: 0;
+  transition: all 0.7s ease;
+}
+.card-amenity:hover .card-amenity-overlay { opacity: 1; }
+.card-amenity h3 { 
+  font-size: 2rem; 
+  color: #fff;
+  font-family: 'Playfair Display';
+  margin-bottom: 12px;
+}
+.card-amenity p {
+  color: #e4e3d3;
+  font-size: 1.1rem;
+}
+.card-amenity:hover { 
+  transform: translateY(-25px) scale(1.03); 
+  border-color: var(--gold-solid); 
+}
+.card-amenity:hover img { 
+  transform: scale(1.2) rotate(2deg); 
+}
+@media (max-width: 768px) {
+  .hamburger-btn { display: inline-block; }
+  nav .links, .member-login { display: none; }
+  section { padding: 70px 5%; }
+  .grid-amenities { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo"><img src="images/logo.png" alt="RVR Logo"></div>
+  <div class="links">
+    <a href="index.html">Home</a>
+    <a href="about.html">About Us</a>
+    <a href="amenities.html">Amenities</a>
+    <a href="features.html">Features</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="enquiry.html">Enquiry</a>
+    <a href="support.html">Support</a>
+  </div>
+  <a href="login.html" class="member-login">Member Login</a>
+  <button id="hamburgerBtn" class="hamburger-btn" aria-expanded="false" aria-label="Open menu">
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+  </button>
+</nav>
+
+<div id="newMobileMenu" hidden>
+  <a href="index.html">Home</a>
+  <a href="about.html">About Us</a>
+  <a href="amenities.html">Amenities</a>
+  <a href="features.html">Features</a>
+  <a href="gallery.html">Gallery</a>
+  <a href="enquiry.html">Enquiry</a>
+  <a href="support.html">Support</a>
+</div>
+
+<div class="page-hero">
+  <div class="page-hero-content">
+    <h1>Premium Features</h1>
+    <p style="font-size: 1.4rem; color: #e4e3d3; letter-spacing: 2px;">Infrastructure That Inspires</p>
+  </div>
+</div>
+
+<section id="features">
+  <div class="grid-amenities">
+    <div class="card-amenity">
+      <img src="images/clubhouse.jpg" alt="Club House" onerror="this.src='images/placeholder.svg'">
+      <div class="card-amenity-overlay">
+        <h3>Club House</h3>
+        <p>Multi-purpose community hall with AC, indoor games, gym, and co-working space</p>
+      </div>
+    </div>
+    <div class="card-amenity">
+      <img src="images/gym.jpg" alt="Luxury Gym" onerror="this.src='images/placeholder.svg'">
+      <div class="card-amenity-overlay">
+        <h3>Luxury Gymnasium</h3>
+        <p>State-of-the-art fitness center with cardio, weights, and professional trainers</p>
+      </div>
+    </div>
+    <div class="card-amenity">
+      <img src="images/pool.jpg" alt="Swimming Pool" onerror="this.src='images/placeholder.svg'">
+      <div class="card-amenity-overlay">
+        <h3>Swimming Pool</h3>
+        <p>Olympic-size infinity pool with kids' zone and changing rooms</p>
+      </div>
+    </div>
+    <div class="card-amenity">
+      <img src="images/park.jpg" alt="Parks" onerror="this.src='images/placeholder.svg'">
+      <div class="card-amenity-overlay">
+        <h3>Landscaped Parks</h3>
+        <p>Green spaces with walking tracks, benches, and children's play areas</p>
+      </div>
+    </div>
+    <div class="card-amenity">
+      <img src="images/out door theatre.jpg" alt="Outdoor Theatre" onerror="this.src='images/placeholder.svg'">
+      <div class="card-amenity-overlay">
+        <h3>Outdoor Theatre</h3>
+        <p>Open-air entertainment zone with amphitheater seating for 300+ people</p>
+      </div>
+    </div>
+    <div class="card-amenity">
+      <img src="images/hero-bg.png" alt="Gated Community" onerror="this.src='images/placeholder.svg'">
+      <div class="card-amenity-overlay">
+        <h3>Gated Community</h3>
+        <p>24/7 Security, CCTV Surveillance, and controlled access gates</p>
+      </div>
+    </div>
+    <div class="card-amenity">
+      <img src="images/kalyanamandapamu.png" alt="Kalyana Mandapam" onerror="this.src='images/placeholder.svg'">
+      <div class="card-amenity-overlay">
+        <h3>Kalyana Mandapam</h3>
+        <p>Elegant marriage hall with banquet, kitchen, and 500+ seating capacity</p>
+      </div>
+    </div>
+    <div class="card-amenity">
+      <img src="images/100%20ft,%2060%20ft,%20and%2040%20ft%20roads.jpg" alt="Wide Roads" onerror="this.src='images/placeholder.svg'">
+      <div class="card-amenity-overlay">
+        <h3>Wide Road Network</h3>
+        <p>100 ft, 60 ft, and 40 ft black-topped roads with street lights</p>
+      </div>
+    </div>
+    <div class="card-amenity">
+      <img src="images/plantation.jpg" alt="Green Plantation" onerror="this.src='images/placeholder.svg'">
+      <div class="card-amenity-overlay">
+        <h3>Green Plantation</h3>
+        <p>20%+ green cover with native trees, landscaping, and eco-zones</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+function openNewMenu() {
+  const menu = document.getElementById('newMobileMenu');
+  const btn = document.getElementById('hamburgerBtn');
+  if (!menu || !btn) return;
+  menu.classList.add('open');
+  menu.removeAttribute('hidden');
+  btn.setAttribute('aria-expanded', 'true');
+  document.body.style.overflow = 'hidden';
+}
+function closeNewMenu() {
+  const menu = document.getElementById('newMobileMenu');
+  const btn = document.getElementById('hamburgerBtn');
+  if (!menu || !btn) return;
+  menu.classList.remove('open');
+  menu.setAttribute('hidden', '');
+  btn.setAttribute('aria-expanded', 'false');
+  document.body.style.overflow = '';
+}
+function setupNewHamburger() {
+  const btn = document.getElementById('hamburgerBtn');
+  const menu = document.getElementById('newMobileMenu');
+  if (!btn || !menu) return;
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    if (expanded) closeNewMenu(); else openNewMenu();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') {
+      closeNewMenu();
+    }
+  });
+  document.addEventListener('click', (e) => {
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    if (expanded && !menu.contains(e.target) && !btn.contains(e.target)) {
+      closeNewMenu();
+    }
+  });
+}
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('nav');
+  if (window.scrollY > 100) {
+    nav.style.background = 'rgba(255, 255, 255, 0.98)';
+    nav.style.backdropFilter = 'blur(35px) saturate(180%)';
+    nav.style.boxShadow = '0 25px 70px rgba(0,0,0,0.6)';
+  } else {
+    nav.style.background = 'rgba(255, 255, 255, 0.75)';
+    nav.style.backdropFilter = 'blur(20px) saturate(180%)';
+    nav.style.boxShadow = '0 15px 50px rgba(0,0,0,0.4)';
+  }
+});
+
+function initNavbar() {
+  const links = document.querySelectorAll('#newMobileMenu a');
+  links.forEach(link => link.addEventListener('click', closeNewMenu));
+  setupNewHamburger();
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initNavbar);
+} else {
+  initNavbar();
+}
+</script>
+
+</body>
+</html>

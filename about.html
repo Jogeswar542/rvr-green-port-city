@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- PROTECTION: Block DevTools & Source Code Access -->
+<script src="js/protection.min.js?v=20260111"></script>
+<meta charset="UTF-8">
+<title>About Us | RVR Green Port City</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="css/style.css">
+<style>
+:root {
+  --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+  --gold-solid: #d4af37;
+  --premium-black: #050505;
+  --glass-white: rgba(255, 255, 255, 0.75);
+  --glass-dark: rgba(5, 5, 5, 0.85);
+  --ios-blur: blur(20px) saturate(180%);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body { 
+    font-family: 'Inter', sans-serif; 
+    background-color: var(--premium-black); 
+    background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url("images/bg.png");
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    color: #fff; 
+    overflow-x: hidden; 
+}
+
+nav {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 94%;
+  max-width: 1400px;
+  background: var(--glass-white);
+  backdrop-filter: var(--ios-blur);
+  -webkit-backdrop-filter: var(--ios-blur);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 25px;
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10000;
+  box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+}
+
+.nav-logo img { height: 50px; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.2)); }
+
+nav .links { display: flex; align-items: center; gap: 8px; }
+
+nav .links a {
+  text-decoration: none;
+  color: #000;
+  font-weight: 700;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  padding: 12px 24px;
+  border-radius: 20px;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+nav .links a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--gold-gradient);
+  z-index: -1;
+  transition: left 0.4s ease;
+}
+
+nav .links a:hover::before { left: 0; }
+nav .links a:hover { color: #000; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4); }
+
+.member-login {
+  padding: 12px 28px;
+  border-radius: 25px;
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-decoration: none;
+  background: var(--gold-gradient);
+  color: #000;
+  transition: all 0.4s ease;
+  box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+}
+
+.member-login:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.6);
+}
+
+.hamburger-btn { display: none; appearance: none; background: transparent; border: none; padding: 10px; cursor: pointer; z-index: 10001; }
+.hamburger-btn .bar { width: 26px; height: 3px; background: #000; border-radius: 2px; display: block; transition: transform 0.25s ease, opacity 0.25s ease; }
+.hamburger-btn .bar + .bar { margin-top: 5px; }
+.hamburger-btn[aria-expanded="true"] .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.hamburger-btn[aria-expanded="true"] .bar:nth-child(2) { opacity: 0; }
+.hamburger-btn[aria-expanded="true"] .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+#newMobileMenu { position: fixed; inset: 0; display: none; visibility: hidden; opacity: 0; pointer-events: none; z-index: 2147483647; background: rgba(0,0,0,0.95); backdrop-filter: var(--ios-blur); -webkit-backdrop-filter: var(--ios-blur); padding: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 18px; }
+#newMobileMenu.open { display: flex; visibility: visible; opacity: 1; pointer-events: auto; }
+#newMobileMenu a { color: #fff; font-size: 22px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; padding: 16px 28px; border-radius: 18px; text-decoration: none; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); width: 80%; text-align: center; }
+#newMobileMenu a:hover { background: var(--gold-gradient); color: #000; }
+
+.page-hero {
+  height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  margin-top: 0;
+}
+
+.page-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(255, 255, 255, 0.05));
+  backdrop-filter: blur(2px);
+  z-index: 1;
+}
+
+.page-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+  padding: 0 20px;
+}
+
+.page-hero h1 {
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 30px;
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: 'Playfair Display', serif;
+}
+
+section { padding: 120px 8%; position: relative; }
+
+.section-title {
+  text-align: center;
+  font-size: 3.5rem;
+  margin-bottom: 70px;
+  font-family: 'Playfair Display';
+  position: relative;
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.content-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(25px);
+  border-radius: 35px;
+  padding: 60px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  margin-bottom: 40px;
+  transition: all 0.5s ease;
+}
+
+.content-card:hover {
+  transform: translateY(-10px);
+  border-color: var(--gold-solid);
+  box-shadow: 0 35px 90px rgba(0,0,0,0.5);
+}
+
+.content-card h3 {
+  color: var(--gold-solid);
+  font-size: 2rem;
+  font-family: 'Playfair Display';
+  margin-bottom: 25px;
+}
+
+.content-card p {
+  color: #e4e3d3;
+  font-size: 1.2rem;
+  line-height: 1.9;
+  margin-bottom: 20px;
+}
+
+.content-card ul {
+  list-style: none;
+  margin-top: 30px;
+}
+
+.content-card ul li {
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  color: #fff;
+  font-size: 1.15rem;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.content-card ul li:before {
+  content: "✓";
+  background: var(--gold-gradient);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  color: #000;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .hamburger-btn { display: inline-block; }
+  nav .links, .member-login { display: none; }
+  section { padding: 70px 5%; }
+  .content-card { padding: 40px 25px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <img src="images/logo.png" alt="RVR Logo">
+  </div>
+  <div class="links">
+    <a href="index.html">Home</a>
+    <a href="about.html">About Us</a>
+    <a href="amenities.html">Amenities</a>
+    <a href="features.html">Features</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="enquiry.html">Enquiry</a>
+    <a href="support.html">Support</a>
+  </div>
+  <a href="login.html" class="member-login">Member Login</a>
+  <button id="hamburgerBtn" class="hamburger-btn" aria-expanded="false" aria-label="Open menu">
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+  </button>
+</nav>
+
+<div id="newMobileMenu" hidden>
+  <a href="index.html">Home</a>
+  <a href="about.html">About Us</a>
+  <a href="amenities.html">Amenities</a>
+  <a href="features.html">Features</a>
+  <a href="gallery.html">Gallery</a>
+  <a href="enquiry.html">Enquiry</a>
+  <a href="support.html">Support</a>
+</div>
+
+<div class="page-hero">
+  <div class="page-hero-content">
+    <h1>About RVR Real Estate</h1>
+    <p style="font-size: 1.4rem; color: #e4e3d3; letter-spacing: 2px;">Building Dreams Since 2003</p>
+  </div>
+</div>
+
+<section style="background: rgba(0,0,0,0.3);">
+  <div class="content-card">
+    <h3>🏆 Leading Real Estate Consultancy in Kavali</h3>
+    <p>
+      <strong>RVR Real Estate Marketing</strong> has been at the forefront of real estate development in Kavali, Ongole, and Nellore regions since 2003. With over <strong>two decades of trust and excellence</strong>, we specialize in creating premium <strong>NUDA-approved gated community ventures</strong> that combine luxury living with strategic investment value.
+    </p>
+    <p>
+      Our mission is to provide families with <strong>safe, legally compliant, and future-ready residential plots</strong> that appreciate in value while offering world-class amenities and infrastructure.
+    </p>
+  </div>
+
+  <div class="content-card">
+    <h3>🌟 Why Choose RVR Real Estate?</h3>
+    <ul>
+      <li><strong>NUDA Registered & LP Approved:</strong> All ventures carry complete legal documentation with LP numbers for your peace of mind</li>
+      <li><strong>15+ Years of Excellence:</strong> Proven track record in delivering quality residential projects across Andhra Pradesh</li>
+      <li><strong>Prime Locations:</strong> Strategic site selection near industrial hubs, ports, and national highways ensuring rapid appreciation</li>
+      <li><strong>Transparent Pricing:</strong> No hidden charges - flat pricing with clear payment plans and EMI options</li>
+      <li><strong>End-to-End Support:</strong> From plot selection to registration - we handle every step with professionalism</li>
+      <li><strong>Customer-First Approach:</strong> 24/7 support, site visits, and dedicated relationship managers for each client</li>
+    </ul>
+  </div>
+
+  <div class="content-card">
+    <h3>📋 About Gitanjali Green Port City</h3>
+    <p>
+      Spanning <strong>100 acres</strong> of meticulously planned land, <strong>Gitanjali Green Port City</strong> is our flagship mega venture strategically positioned near the upcoming <strong>Ramayapatnam Port</strong>, <strong>BPCL refinery</strong>, <strong>Indosol Solar Park</strong>, and other multi-crore industrial projects worth over ₹4 lakh crore combined investment.
+    </p>
+    <p>
+      This venture features:
+    </p>
+    <ul>
+      <li><strong>Plot Sizes:</strong> Ranging from 150 sq yards to 500+ sq yards</li>
+      <li><strong>Road Infrastructure:</strong> 100 ft, 60 ft, and 40 ft wide black-topped roads with street lighting</li>
+      <li><strong>Amenities:</strong> Clubhouse, swimming pool, kalyana mandapam, open theater, children's parks, solar street lights, 24/7 security</li>
+      <li><strong>Green Spaces:</strong> Over 20% dedicated to parks, plantation, and recreational zones</li>
+      <li><strong>Water Supply:</strong> Bore wells, overhead tanks, and underground water taps to every plot</li>
+      <li><strong>Electricity:</strong> Underground cabling with dedicated transformers</li>
+      <li><strong>Compound Wall:</strong> Fully fenced perimeter with controlled entry/exit gates</li>
+    </ul>
+  </div>
+
+  <div class="content-card">
+    <h3>💼 Investment Advantages</h3>
+    <p>
+      The region surrounding Gitanjali Green Port City is witnessing unprecedented industrial growth:
+    </p>
+    <ul>
+      <li><strong>Ramayapatnam Port (₹4,992 Cr):</strong> Deep-water port attracting logistics and shipping industries</li>
+      <li><strong>Jindal Imports & Exports (₹25,000 Cr):</strong> Large-scale metals and industrial hub creating thousands of jobs</li>
+      <li><strong>Indosol Solar Manufacturing (₹1,60,000 Cr):</strong> World's largest solar panel manufacturing facility</li>
+      <li><strong>BPCL Refinery (₹1,20,000 Cr):</strong> Strategic petroleum infrastructure project</li>
+      <li><strong>Dagadarthi Airport (₹916 Cr):</strong> New greenfield airport enhancing regional connectivity</li>
+    </ul>
+    <p>
+      These mega projects ensure sustained demand for residential properties, making Gitanjali Green Port City one of the <strong>fastest-appreciating real estate investments</strong> in coastal Andhra Pradesh.
+    </p>
+  </div>
+
+  <div class="content-card">
+    <h3>📞 Get in Touch</h3>
+    <p>
+      Ready to secure your family's future? Our expert consultants are available 24/7 to answer your questions, arrange site visits, and guide you through the entire purchase process.
+    </p>
+    <p style="font-size: 1.5rem; font-weight: 900; color: var(--gold-solid); text-align: center; margin-top: 30px;">
+      📱 +91 9700900532 | +91 9440716226
+    </p>
+    <p style="text-align: center; margin-top: 20px;">
+      <a href="enquiry.html" style="background: var(--gold-gradient); padding: 20px 50px; border-radius: 30px; color: #000; text-decoration: none; font-weight: 800; font-size: 1.2rem; display: inline-block; box-shadow: 0 20px 50px rgba(212,175,55,0.5); transition: all 0.4s;">Book Site Visit Now</a>
+    </p>
+  </div>
+</section>
+
+<script>
+function openNewMenu() {
+  const menu = document.getElementById('newMobileMenu');
+  const btn = document.getElementById('hamburgerBtn');
+  if (!menu || !btn) return;
+  menu.classList.add('open');
+  menu.removeAttribute('hidden');
+  btn.setAttribute('aria-expanded', 'true');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeNewMenu() {
+  const menu = document.getElementById('newMobileMenu');
+  const btn = document.getElementById('hamburgerBtn');
+  if (!menu || !btn) return;
+  menu.classList.remove('open');
+  menu.setAttribute('hidden', '');
+  btn.setAttribute('aria-expanded', 'false');
+  document.body.style.overflow = '';
+}
+
+function setupNewHamburger() {
+  const btn = document.getElementById('hamburgerBtn');
+  const menu = document.getElementById('newMobileMenu');
+  if (!btn || !menu) return;
+  
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    if (expanded) closeNewMenu(); else openNewMenu();
+  });
+  
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') {
+      closeNewMenu();
+    }
+  });
+  
+  document.addEventListener('click', (e) => {
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    if (expanded && !menu.contains(e.target) && !btn.contains(e.target)) {
+      closeNewMenu();
+    }
+  });
+}
+
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('nav');
+  if (window.scrollY > 100) {
+    nav.style.background = 'rgba(255, 255, 255, 0.98)';
+    nav.style.backdropFilter = 'blur(35px) saturate(180%)';
+    nav.style.boxShadow = '0 25px 70px rgba(0,0,0,0.6)';
+  } else {
+    nav.style.background = 'rgba(255, 255, 255, 0.75)';
+    nav.style.backdropFilter = 'blur(20px) saturate(180%)';
+    nav.style.boxShadow = '0 15px 50px rgba(0,0,0,0.4)';
+  }
+});
+
+function initNavbar() {
+  const links = document.querySelectorAll('#newMobileMenu a');
+  links.forEach(link => link.addEventListener('click', closeNewMenu));
+  setupNewHamburger();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initNavbar);
+} else {
+  initNavbar();
+}
+</script>
+
+</body>
+</html>

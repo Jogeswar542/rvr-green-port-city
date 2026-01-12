@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#bf953f"/>
+      <stop offset="0.25" stop-color="#fcf6ba"/>
+      <stop offset="0.5" stop-color="#b38728"/>
+      <stop offset="0.75" stop-color="#fbf5b7"/>
+      <stop offset="1" stop-color="#aa771c"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="1200" height="800" fill="#0a0a0a"/>
+  <rect x="40" y="40" width="1120" height="720" rx="32" fill="#111" stroke="url(#g)" stroke-width="4"/>
+  <g fill="#d4af37" font-family="Inter, Arial, sans-serif" text-anchor="middle">
+    <text x="600" y="380" font-size="48" font-weight="800">Image Coming Soon</text>
+    <text x="600" y="440" font-size="24" opacity="0.85">Replace with your real photo under images/</text>
+  </g>
+</svg>

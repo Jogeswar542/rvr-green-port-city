@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- PROTECTION: Block DevTools & Source Code Access -->
+    <script src="js/protection.min.js?v=20260111"></script>
+        <script>
+            // Early gate: require prior login
+            (function() {
+                const role = localStorage.getItem('userRole') || localStorage.getItem('role');
+                if (!role || (role !== 'admin' && role !== 'agent')) {
+                    window.location.replace('login.html');
+                }
+            })();
+        </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Portal | RVR</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+    
+    <!-- CHECK LOGIN STATUS -->
+    <script src="role.js?v=20260111"></script>
+    <style>
+        /* BACKGROUND IMAGE bg1.jpg */
+        body { 
+            margin: 0; 
+            background: url('images/bg1.jpg') center/cover no-repeat fixed; 
+            font-family: 'Inter', sans-serif; 
+            overflow: hidden; 
+        }
+
+        /* HEADER */
+        .glass-header {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 1400px; padding: 12px 25px;
+            background: rgba(20, 20, 20, 0.85); backdrop-filter: blur(20px); border-radius: 20px;
+            display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.15); z-index: 100;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* POPUP (Styled like Admin Sidebar) */
+        #agentPopup {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            width: 380px; max-width: 90%;
+            background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(30px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 18px; padding: 25px;
+            display: none; z-index: 1000;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+            animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes slideUp { from { transform: translate(-50%, 100px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+
+        /* Snapshot Styles (Same as Admin) */
+        .snapshot { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .row { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 6px; }
+        .lbl { color: #888; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        .val { color: #eee; font-weight: 600; font-size: 13px; }
+        .hl { color: #ffd700; font-size: 15px; }
+
+        h3 { color: #fff; margin: 0 0 15px 0; font-size: 16px; font-weight: 900; letter-spacing: 0.5px; }
+        
+        .status-badge { 
+            padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; color: #fff; display: inline-block;
+        }
+        /* Status Colors */
+        .Available { background-color: #2ECC71; }
+        .Sold { background-color: #E74C3C; }
+        .Mortgage { background-color: #F1C40F; color: #000; }
+        .Booked { background-color: #F39C12; }
+
+        /* Agent Feature Buttons */
+        .features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .feature-btn {
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1);
+            color: #fff; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 11px; font-weight: 700; text-transform: uppercase;
+            display: flex; flex-direction: column; align-items: center; gap: 5px; transition: 0.2s;
+        }
+        .feature-btn:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
+        .feature-btn i { font-size: 16px; color: #ffd700; }
+
+        /* PLOTS SYNC INDICATOR */
+        #plotsSyncIndicator {
+            position: fixed; top: 100px; right: 30px; z-index: 950;
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2); border-radius: 30px;
+            padding: 10px 16px; color: #fff; font-size: 12px; font-weight: 600;
+            display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+        #plotsSyncIndicator.synced { color: #4ade80; border-color: #4ade80; }
+        #plotsSyncIndicator.syncing { color: #facc15; border-color: #facc15; animation: pulse 1.5s infinite; }
+        #plotsSyncIndicator.offline { color: #ef4444; border-color: #ef4444; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .btn-close { width: 100%; background: #333; color: #fff; padding: 12px; margin-top: 15px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
+
+        /* Shared Modal Styles */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-box { background: #fff; padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        
+        canvas { display: block; cursor: grab; }
+    </style>
+</head>
+<body>
+    <div class="glass-header">
+        <div style="font-weight: 900; color:#fff; letter-spacing: 1px;">AGENT <span style="color:#ffd700">PORTAL</span></div>
+        <button id="logoutBtn" style="border:none; background:none; color:#aaa; font-weight:700; cursor:pointer; font-size:11px;">LOGOUT <i class="fas fa-sign-out-alt"></i></button>
+    </div>
+    
+    <canvas id="mainCanvas"></canvas>
+
+    <!-- Plots Sync Indicator -->
+    <div id="plotsSyncIndicator" title="Plots sync status">
+        <span>📦 Plots Offline Cache</span>
+    </div>
+
+    <div id="agentPopup">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:15px;">
+            <div>
+                <h3 id="pNumber" style="margin:0;">Plot --</h3>
+                <span id="pStatus" class="status-badge" style="margin-top:5px;">--</span>
+            </div>
+            <div id="pCorner" style="font-size:10px; font-weight:900; background:linear-gradient(to right, #ffd700, #ffaa00); color:#000; padding:4px 8px; border-radius:4px; display:none;">CORNER BIT</div>
+        </div>
+        
+        <div class="snapshot">
+            <div class="row"><span class="lbl">Area</span><span class="val" id="pArea">--</span></div>
+            <div class="row"><span class="lbl">Price/Ank</span><span class="val" id="pRate">--</span></div>
+            <div class="row"><span class="lbl">Total</span><span class="val hl" id="pTotal">--</span></div>
+            <div class="row"><span class="lbl">Block</span><span class="val" id="pBlock">--</span></div>
+            <div class="row"><span class="lbl">Facing</span><span class="val" id="pFace">--</span></div>
+            <div class="row"><span class="lbl">Road</span><span class="val" id="pRoad">--</span></div>
+        </div>
+
+        <div class="features-grid">
+            <button class="feature-btn" onclick="openVasthuModal()"><i class="fas fa-compass"></i> Vasthu</button>
+            <button class="feature-btn" onclick="openShareModal()"><i class="fas fa-share-alt"></i> Share</button>
+            <button class="feature-btn" style="grid-column: span 2;" onclick="openCalculator()"><i class="fas fa-calculator"></i> Price Calculator</button>
+        </div>
+
+        <button class="btn-close" onclick="document.getElementById('agentPopup').style.display='none'">Close</button>
+    </div>
+
+    <div id="vasthuModal" class="modal-overlay">
+        <div class="modal-box" style="border-top: 5px solid #F39C12;">
+            <div style="font-size:18px; font-weight:800; color:#d35400; margin-bottom:10px;">Vasthu Analysis</div>
+            <div id="vasthuText" style="font-size:14px; color:#555; line-height:1.6; max-height:300px; overflow-y:auto;"></div>
+            <button onclick="document.getElementById('vasthuModal').style.display='none'" style="width:100%; padding:12px; margin-top:15px; background:#eee; border:none; border-radius:8px; font-weight:700; cursor:pointer;">Close</button>
+        </div>
+    </div>
+
+    <div id="shareModal" class="modal-overlay">
+        <div class="modal-box" style="border-top: 5px solid #2ECC71;">
+            <div style="font-size:18px; font-weight:800; color:#27ae60; margin-bottom:10px;">Share Plot Details</div>
+            <textarea id="shareTextarea" style="width:100%; height:120px; padding:10px; border:1px solid #ddd; border-radius:8px; font-family:'Inter'; font-size:13px; margin-bottom:10px;" readonly></textarea>
+            <button id="copyBtn" onclick="copyToClipboard()" style="width:100%; padding:12px; background:#2ECC71; color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer;">Copy to Clipboard</button>
+            <button onclick="document.getElementById('shareModal').style.display='none'" style="width:100%; padding:12px; margin-top:10px; background:#fff; border:1px solid #ccc; border-radius:8px; font-weight:700; cursor:pointer;">Close</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { startRealtimeSync, logout } from "./js/auth.js";
+        import { setupCanvas } from "./js/script.js";
+        import { setupCalculator, openCalculator } from "./js/calculator.js";
+
+        let currentPlot = null; 
+        const commercialPlotIds = [319, 317, 306, 304, 291, 293, 280, 278, 265, 267, 252, 254, 241, 239, 228, 226, 213, 215, 200, 202, 59];
+
+        // Init Calculator (Injects HTML)
+        setupCalculator();
+        window.openCalculator = openCalculator; // Expose to global scope for button click
+
+        setupCanvas('mainCanvas', (plot) => {
+            currentPlot = plot;
+            
+            // 1. Populate Popup
+            document.getElementById('pNumber').innerText = "Plot " + plot.plotNumber;
+            document.getElementById('pArea').innerText = plot.area || "-";
+            document.getElementById('pRate').innerText = plot.pricePerAnkanam || "-";
+            document.getElementById('pTotal').innerText = plot.totalPrice || "-";
+            document.getElementById('pBlock').innerText = plot.block || "-";
+            document.getElementById('pFace').innerText = plot.directionFacing || "-";
+            document.getElementById('pRoad').innerText = plot.roadFacing || "-";
+
+            // 2. Status Badge
+            const badge = document.getElementById('pStatus');
+            badge.innerText = plot.status;
+            badge.className = `status-badge ${plot.status}`;
+
+            // 3. Commercial/Corner Badge
+            const cornerBadge = document.getElementById('pCorner');
+            const isCorner = (plot.roadFacing && (plot.roadFacing.includes(',') || plot.roadFacing.includes('-')));
+            const isCommercial = commercialPlotIds.includes(plot.plotNumber);
+
+            if(isCommercial) {
+                cornerBadge.style.display = 'block';
+                cornerBadge.innerText = "COMMERCIAL";
+                cornerBadge.style.background = "linear-gradient(to right, #000, #444)";
+                cornerBadge.style.color = "#FFD700";
+            } else if (isCorner) {
+                cornerBadge.style.display = 'block';
+                cornerBadge.innerText = "CORNER BIT";
+                cornerBadge.style.background = "linear-gradient(to right, #ffd700, #ffaa00)";
+                cornerBadge.style.color = "#000";
+            } else {
+                cornerBadge.style.display = 'none';
+            }
+
+            // 4. Show Popup
+            document.getElementById('agentPopup').style.display = 'block';
+        });
+
+        // --- VASTHU & SHARE LOGIC (Same as reference) ---
+        window.openVasthuModal = function() {
+            if(!currentPlot) return;
+            const dir = (currentPlot.directionFacing || '').toUpperCase();
+            const road = (currentPlot.roadFacing || '');
+            const isCorner = road.includes(',') || road.includes('-');
+            
+            let text = `<p><b>Analysis for Plot ${currentPlot.plotNumber}</b></p>`;
+            
+            if(dir.includes('WEST')) text += `<p><b>West Facing:</b> Good for business & stability (Labha Sthanam).</p>`;
+            else if(dir.includes('EAST')) text += `<p><b>East Facing:</b> Auspicious for health & prosperity.</p>`;
+            else text += `<p><b>${currentPlot.directionFacing}:</b> Neutral facing, allows custom planning.</p>`;
+
+            if(isCorner) text += `<p><b>Corner Bit:</b> Excellent ventilation and positive energy flow (Prana Vayu).</p>`;
+            else text += `<p><b>Standard:</b> Good rectangular shape for balanced construction.</p>`;
+
+            document.getElementById('vasthuText').innerHTML = text;
+            document.getElementById('vasthuModal').style.display = 'flex';
+        }
+
+        window.openShareModal = function() {
+            if(!currentPlot) return;
+            const shareStr = `*RVR REAL ESTATE*\nPlot: ${currentPlot.plotNumber} (${currentPlot.status})\nArea: ${currentPlot.area} Ank\nPrice: ${currentPlot.totalPrice}\nBlock: ${currentPlot.block}\nFacing: ${currentPlot.directionFacing}\n\nContact us for details.`;
+            document.getElementById('shareTextarea').value = shareStr;
+            document.getElementById('shareModal').style.display = 'flex';
+        }
+
+        window.copyToClipboard = function() {
+            const txt = document.getElementById("shareTextarea");
+            txt.select(); navigator.clipboard.writeText(txt.value);
+            document.getElementById('copyBtn').innerText = "Copied!";
+            setTimeout(() => document.getElementById('copyBtn').innerText = "Copy to Clipboard", 2000);
+        }
+
+        startRealtimeSync();
+        document.getElementById('logoutBtn').onclick = () => { if(confirm("Logout?")) { logout(); window.location.href='index.html'; }};
+    </script>
+</body>
+</html>
